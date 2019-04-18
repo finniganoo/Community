@@ -59,6 +59,7 @@
     <None Include="chainfn.fsx" />
     <None Include="fold.fsx" />
     <None Include="polygons.fsx" />
+    <None Include="square.fsx" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />

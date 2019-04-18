@@ -13,11 +13,11 @@ type Plotter = {
 let naiveLine (x1, y1) (plotter: Plotter) = 
     let updatedPlotter = { plotter with position = (x1,y1) }
     let (x0,y0) = plotter.position
-    //printfn "%i %i -- %i %i" x0 y0 x1 y1
+    printfn "%i %i -- %i %i" x0 y0 x1 y1
     let xLen = float (x1-x0)
     let yLen = float (y1-y0)
     let x0,y0,x1,y1 = if x0 > x1 then x1,y1,x0,y0 else x0,y0,x1,y1
-    //printfn "%i %i -- %i %i" x0 y0 x1 y1
+    printfn "%i %i -- %i %i" x0 y0 x1 y1
     if xLen <> 0.0 then 
         for x in x0..x1 do
             let proportion = float (x-x0) / xLen
@@ -57,10 +57,10 @@ let move dist plotter =
     //printfn "draw %A pixel" dist
     plottered
 
-//let pathAndFileName = 
-//    Path.Combine(__SOURCE_DIRECTORY__,"polygons.png")
+let pathAndFileName = 
+    Path.Combine(__SOURCE_DIRECTORY__,"polygons.png")
 
-let bitmap = new Bitmap(100,100)
+let bitmap = new Bitmap(60,40)
 
 let fill color (bitmap: Bitmap) =
     for x in 0..bitmap.Width-1 do
@@ -70,21 +70,25 @@ fill Color.BlanchedAlmond bitmap
 
 let initialPlotter = {
     position = (0,0)
-    color = Color.Lime
+    color = Color.Red
     direction = 0.0
     bitmap = bitmap
     }
 
-let pathAndFileName = 
-    Path.Combine(__SOURCE_DIRECTORY__,"polygons.png")
+printfn "side margin: %A" (int ((bitmap.Width-60)/2))
+printfn "top/bottom margin: %A" (int ((bitmap.Height-30)/2))
 
-let polygon (sides:int) length plotter =
-    let angle = Math.Round(360.0/float sides)
-    Seq.fold ((fun s i -> 
-        turn angle s 
-        |> move length 
-        )) plotter [1.0..(float sides)]
+let rectangle x y = 
+    { initialPlotter with position = (int ((bitmap.Width-x)/2), int ((bitmap.Height-y)/2) ) }
+    |> turn 90.0
+    |> move x
+    |> turn 90.0
+    |> move y
+    |> turn 90.0
+    |> move x
+    |> turn 90.0
+    |> move y
 
-let triangle = {initialPlotter with position = (10,30)} |> polygon 4 20 |> polygon 5 30 |> polygon 6 40
+let rect = rectangle 40 20
 
-triangle.bitmap.Save(pathAndFileName)
+rect.bitmap.Save(pathAndFileName)
